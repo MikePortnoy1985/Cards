@@ -10,6 +10,12 @@
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.53",
     "@types/react-dom": "^16.9.8",
+    "eslint-config-prettier": "^7.1.0",
+    "husky": "^4.3.6",
+    "lint-staged": "^10.5.3",
+    "node-sass": "4.14",
+    "normalize.css": "^8.0.1",
+    "prettier": "^2.2.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.1",
@@ -20,12 +26,37 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "format": "prettier --w \"src/**/*.{ts,tsx}\" && eslint --fix . --ext .ts,.tsx",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
-      "react-app/jest"
+      "react-app/jest",
+      "prettier"
+    ],
+    "rules": {
+      "no-multi-spaces": "error",
+      "jsx-quotes": [
+        "warn",
+        "prefer-single"
+      ],
+      "no-mixed-spaces-and-tabs": "error",
+      "no-debugger": "warn",
+      "no-alert": "warn",
+      "no-console": "warn",
+      "prefer-const": "error"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write",
+      "eslint --fix"
     ]
   },
   "browserslist": {
