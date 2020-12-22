@@ -1,17 +1,16 @@
 @import-normalize;
+@import './02-features/01-learning/learnPage/LearnPage.module';
 
-*{
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  border: 0;
+* {
+   box-sizing: border-box;
+   margin: 0;
+   padding: 0;
+   border: 0;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+   font-family: 'Ubuntu', sans-serif;
+   font-size: 10px;
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
 }
-
