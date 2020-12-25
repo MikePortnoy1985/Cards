@@ -1,0 +1,30 @@
+.login_wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .title {
+    font-size: 3rem;
+  }
+
+  .form_wrap {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .field {
+      border: none;
+      background: #f2f2f2;
+      padding: 5px;
+      border-radius: 3px;
+      width: 250px;
+      outline: none;
+      &:focus{
+        border: blue 2px solid;
+      }
+    }
+  }
+}
+
+

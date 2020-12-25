@@ -1,4 +1,6 @@
-import firebase from 'firebase'
+import firebase from 'firebase/app'
+import 'firebase/auth'
+import 'firebase/database'
 
 const firebaseConfig = {
    apiKey: 'AIzaSyAgxVrU7bL_aHEwmL6N1dfQPAnOHJOqEYI',
@@ -12,8 +14,11 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig)
 
-const base = firebase.database()
-
 export const api = {
-   getCards: () => base.ref('/cards').once('value'),
+   getCards: (startValue: string, endValue: string) =>
+      firebase.database().ref('/cards').orderByKey().startAt(startValue).endAt(endValue).once('value'),
+   getCardsByUser: (id: string) => firebase.database().ref(`/cards/${id}`).once('value'),
+   registration: (email: string, password: string) => firebase.auth().createUserWithEmailAndPassword(email, password),
+   auth: (email: string, password: string) => firebase.auth().signInWithEmailAndPassword(email, password),
+   signOut: () => firebase.auth().signOut(),
 }
