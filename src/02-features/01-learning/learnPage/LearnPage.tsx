@@ -23,13 +23,18 @@ const LearnPage: React.FC<PropsType> = ({
                <div key={Math.random()}>
                   <h1>WTF</h1>
                   <h4>{item.id}</h4>
-                  <span>{item.eng}</span>
-                  <span>{item.rus}</span>
+                  <ol>
+                     <li> Eng: {item.eng}</li>
+                     <li> Rus: {item.rus}</li>
+                  </ol>
                </div>
             )
          })}
          <button onClick={logoutHandler}>Log out</button>
-         <button onClick={paginationHandlerPrevious} disabled={cards[0].id === '1'}>
+         <button
+            onClick={paginationHandlerPrevious}
+            // disabled={cards[0].id === '1'}
+         >
             Previous page
          </button>
          <button onClick={paginationHandlerNext} disabled={cards.length < pageItemSize}>
@@ -40,5 +45,5 @@ const LearnPage: React.FC<PropsType> = ({
 }
 
 export default React.memo(LearnPage, (prevProps, nextProps) => {
-   return prevProps.cards !== nextProps.cards
+   return prevProps.cards === nextProps.cards
 })

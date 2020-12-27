@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { api } from '../../03-api/api'
 
 export type UserType = {
-   uid: string | null
+   uid: string
    email: string | null
 }
 

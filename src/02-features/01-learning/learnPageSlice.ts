@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { api } from '../../03-api/api'
 
 export type CardType = {
@@ -13,7 +13,17 @@ export const fillState = createAsyncThunk(
    'learnPage/fillState',
    async (arg: { id: string; startValue: string; endValue: string }, thunkAPI) => {
       try {
-         return await api.getCards(arg.startValue, arg.endValue)
+         const dataSnapshot = await api.getCards(arg.id, arg.startValue, arg.endValue)
+         const result: CardType[] = []
+         dataSnapshot.forEach((item) => {
+            if (item !== null) {
+               const pitem = item.val()
+               result.push(pitem)
+            } else {
+               result.push({ id: '1', rus: '', eng: '' })
+            }
+         })
+         return result
       } catch (e) {
          return thunkAPI.rejectWithValue(e.message)
       }
@@ -23,21 +33,19 @@ export const fillState = createAsyncThunk(
 export const learnPageSlice = createSlice({
    name: 'learnPage',
    initialState: {
-      cards: [{ id: '0', rus: '', eng: '' }],
+      cards: [{ id: '1', rus: 'болванка', eng: '' }],
       loading: false,
       error: '',
       pageItemSize: 4,
    },
-   reducers: {},
+   reducers: {
+      addCardToCards: (state, action: PayloadAction<CardType>) => {
+         state.cards.push(action.payload)
+      },
+   },
    extraReducers: (builder) => {
       builder.addCase(fillState.fulfilled, (state, action) => {
-         const result = [] as Array<CardType>
-         action.payload.forEach((item) => {
-            if (item !== null) {
-               result.push(item.val())
-            }
-         })
-         state.cards = result
+         state.cards = action.payload
          state.loading = false
       })
       builder.addCase(fillState.pending, (state) => {
@@ -49,3 +57,5 @@ export const learnPageSlice = createSlice({
       })
    },
 })
+
+export const { addCardToCards } = learnPageSlice.actions
