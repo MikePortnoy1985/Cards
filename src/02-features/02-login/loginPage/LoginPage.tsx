@@ -5,28 +5,32 @@ import s from './LoginPage.module.scss'
 type PropsType = {
    error: string
    isSubmitting: boolean
+   isValid: boolean
 }
 
-const LoginPage: React.FC<PropsType> = ({ error, isSubmitting }) => {
+const RawLoginPage: React.FC<PropsType> = ({ error, isSubmitting, isValid }) => {
    return (
       <div className={s.login_wrapper}>
          <h2 className={s.title}>Sign up</h2>
          <Form className={s.form_wrap}>
             <label htmlFor='email'>Email</label>
             <Field className={s.field} id='email' name='email' type='email' />
-            <ErrorMessage component='span' name='email' />
             <label htmlFor='password'>Password</label>
             <Field className={s.field} id='password' name='password' type='password' />
-            <ErrorMessage component='span' name='password' />
-            <button type='submit' disabled={isSubmitting}>
+            <button type='submit' disabled={isSubmitting || !isValid}>
                Submit
             </button>
-            {error && <span>{error}</span>}
          </Form>
+         {<ErrorMessage component='span' name='email' /> || <ErrorMessage component='span' name='password' />}
+         {error && <span>{error}</span>}
       </div>
    )
 }
 
-export default React.memo(LoginPage, (prevProps, nextProps) => {
-   return prevProps.isSubmitting === nextProps.isSubmitting && nextProps.error === prevProps.error
+export const LoginPage = React.memo(RawLoginPage, (prevProps, nextProps) => {
+   return (
+      prevProps.isSubmitting === nextProps.isSubmitting &&
+      nextProps.error === prevProps.error &&
+      prevProps.isValid === nextProps.isValid
+   )
 })

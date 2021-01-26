@@ -1,5 +1,7 @@
 import React from 'react'
+import CardInputs from '../cardInputs/CardInputs'
 import { CardType } from '../learnPageSlice'
+import s from './LearnPage.module.scss'
 
 type PropsType = {
    cards: Array<CardType>
@@ -7,6 +9,7 @@ type PropsType = {
    logoutHandler: () => void
    paginationHandlerNext: () => void
    paginationHandlerPrevious: () => void
+   addCardToCollection: (valueEng: string, valueRus: string) => void
 }
 
 const LearnPage: React.FC<PropsType> = ({
@@ -15,30 +18,37 @@ const LearnPage: React.FC<PropsType> = ({
    paginationHandlerNext,
    paginationHandlerPrevious,
    pageItemSize,
+   addCardToCollection,
 }) => {
    return (
-      <div>
-         {cards.map((item) => {
-            return (
-               <div key={Math.random()}>
-                  <h1>WTF</h1>
-                  <h4>{item.id}</h4>
-                  <ol>
-                     <li> Eng: {item.eng}</li>
-                     <li> Rus: {item.rus}</li>
-                  </ol>
-               </div>
-            )
-         })}
-         <button onClick={logoutHandler}>Log out</button>
-         <button
-            onClick={paginationHandlerPrevious}
-            // disabled={cards[0].id === '1'}
-         >
-            Previous page
-         </button>
-         <button onClick={paginationHandlerNext} disabled={cards.length < pageItemSize}>
-            Next page
+      <div className={s.learnPageContainer}>
+         <div className={s.cardsWrapper}>
+            {cards.map((item) => {
+               return (
+                  <div key={Math.random()} className={s.card}>
+                     <h3>WTF</h3>
+                     <ol>
+                        <li> Eng: {item.eng}</li>
+                        <li> Rus: {item.rus}</li>
+                     </ol>
+                  </div>
+               )
+            })}
+         </div>
+         <div className={s.inputsWrapper}>
+            <button
+               onClick={paginationHandlerPrevious}
+               // disabled={cards[0].id === '1'}
+            >
+               Previous page
+            </button>
+            <button onClick={paginationHandlerNext} disabled={cards.length < pageItemSize}>
+               Next page
+            </button>
+            <CardInputs addCardToCollection={addCardToCollection} />
+         </div>
+         <button className={s.logOut} onClick={logoutHandler}>
+            Log out
          </button>
       </div>
    )

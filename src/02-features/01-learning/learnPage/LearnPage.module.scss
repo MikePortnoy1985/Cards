@@ -1,0 +1,41 @@
+.learnPageWrapper {
+   position: relative;
+   height: 100vh;
+
+   .learnPageContainer {
+      margin: 0 auto;
+      height: 100%;
+      width: 80%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
+
+      .cardsWrapper {
+         display: flex;
+         direction: row;
+         justify-content: flex-start;
+         flex-wrap: wrap;
+         .card {
+            width: 6rem;
+         }
+      }
+
+      .inputsWrapper {
+         button {
+            background: #151421;
+            color: #fff;
+            padding: 0.5rem 1rem;
+         }
+      }
+
+      .logOut {
+         position: absolute;
+         top: 2rem;
+         right: 10%;
+         background: #151421;
+         color: #fff;
+         padding: 0.5rem 1rem;
+      }
+   }
+}

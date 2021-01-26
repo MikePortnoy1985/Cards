@@ -1,22 +1,16 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { api } from '../../03-api/api'
-
-export type UserType = {
-   uid: string
-   email: string | null
-}
-
-export type LearnPageStateType = ReturnType<typeof loginPageSlice.reducer>
+import { auth } from '../../03-api/auth'
 
 export const appUserAuth = createAsyncThunk(
    'loginPage/appUserAuth',
    async (arg: { email: string; password: string }, thunkAPI) => {
       try {
-         const response = await api.auth(arg.email, arg.password)
+         const response = await auth.auth(arg.email, arg.password)
          if (response.user === null) {
             return thunkAPI.rejectWithValue('Invalid user')
          } else {
-            return { id: response.user.uid, email: response.user.email }
+            localStorage.setItem('userID', response.user.uid)
+            return { id: response.user.uid }
          }
       } catch (e) {
          return thunkAPI.rejectWithValue(e.message)
@@ -26,7 +20,7 @@ export const appUserAuth = createAsyncThunk(
 
 export const appUserSignOut = createAsyncThunk('loginPage/appUserSignOut', async (_arg, thunkAPI) => {
    try {
-      return await api.signOut()
+      return await auth.signOut()
    } catch (e) {
       return thunkAPI.rejectWithValue('some error occur')
    }
@@ -35,21 +29,33 @@ export const appUserSignOut = createAsyncThunk('loginPage/appUserSignOut', async
 export const loginPageSlice = createSlice({
    name: 'loginPage',
    initialState: {
-      user: {} as UserType,
+      userID: '',
       isLogged: false,
       loading: false,
       error: '',
    },
-   reducers: {},
+   reducers: {
+      setIsLogged: (state, action) => {
+         state.isLogged = action.payload
+      },
+      setError: (state, action) => {
+         state.error = action.payload
+      },
+      setUserID: (state, action) => {
+         state.userID = action.payload
+      },
+      setLoading: (state, action) => {
+         state.loading = action.payload
+      },
+   },
    extraReducers: (builder) => {
-      builder.addCase(appUserAuth.fulfilled, (state, action) => {
-         state.user.uid = action.payload.id
-         state.user.email = action.payload.email
-         state.isLogged = true
-         state.loading = false
-      })
       builder.addCase(appUserAuth.pending, (state) => {
          state.loading = true
+      })
+      builder.addCase(appUserAuth.fulfilled, (state, action) => {
+         state.userID = action.payload.id
+         state.isLogged = true
+         state.loading = false
       })
       builder.addCase(appUserAuth.rejected, (state, action) => {
          state.error = action.payload as string
@@ -60,14 +66,17 @@ export const loginPageSlice = createSlice({
          state.loading = true
       })
       builder.addCase(appUserSignOut.fulfilled, (state) => {
-         state.user = {} as UserType
+         state.userID = ''
          state.isLogged = false
          state.loading = false
+         localStorage.clear()
       })
       builder.addCase(appUserSignOut.rejected, (state, action) => {
-         state.user = {} as UserType
+         state.userID = ''
          state.loading = false
          state.error = action.payload as string
       })
    },
 })
+
+export const { setIsLogged, setError, setUserID, setLoading } = loginPageSlice.actions

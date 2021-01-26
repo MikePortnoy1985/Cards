@@ -1,10 +1,8 @@
 import { Formik } from 'formik'
-import React from 'react'
-import LoginPage from './loginPage/LoginPage'
+import { LoginPage } from './loginPage/LoginPage'
 import { useDispatch, useSelector } from 'react-redux'
 import { appUserAuth } from './loginPageSlice'
 import { AppType } from '../../04-store/store'
-import { Redirect } from 'react-router-dom'
 
 type ValuesErrors = {
    email: string
@@ -14,12 +12,7 @@ type ValuesErrors = {
 
 export const LoginPageContainer: React.FC = () => {
    const dispatch = useDispatch()
-   const error = useSelector<AppType, string>((state) => state.loginPage.error)
-   const isLogged = useSelector<AppType, boolean>((state) => state.loginPage.isLogged)
-
-   if (isLogged) {
-      return <Redirect to={'/learn'} />
-   }
+   const { error } = useSelector<AppType, { error: string }>((state) => state.loginPage)
 
    return (
       <>
@@ -31,20 +24,20 @@ export const LoginPageContainer: React.FC = () => {
             validate={(values) => {
                const errors = {} as ValuesErrors
                if (!values.email) {
-                  errors.email = 'Required'
+                  errors.email = 'Email is required'
                } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
                   errors.email = 'Invalid email address'
                }
                if (!values.password) {
-                  errors.password = 'Required'
+                  errors.password = 'Password is required'
                }
                return errors
             }}
-            onSubmit={async (values, { setSubmitting }) => {
-               await dispatch(appUserAuth({ email: values.email, password: values.password }))
+            onSubmit={(values, { setSubmitting }) => {
+               dispatch(appUserAuth({ email: values.email, password: values.password }))
                setSubmitting(false)
             }}>
-            {({ isSubmitting }) => <LoginPage error={error} isSubmitting={isSubmitting} />}
+            {({ isSubmitting, isValid }) => <LoginPage error={error} isSubmitting={isSubmitting} isValid={isValid} />}
          </Formik>
       </>
    )
